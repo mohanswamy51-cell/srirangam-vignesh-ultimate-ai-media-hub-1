@@ -1,67 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="te">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Srirangam Vignesh Ultimate AI Media Hub</title>
+    <title>Srirangam Vignesh AI Multimedia Hub</title>
     <style>
-        :root {
-            --bg-deep: #03030b;
-            --panel-bg: rgba(13, 18, 36, 0.75);
-            --neon-blue: #00f2fe;
-            --neon-pink: #ec4899;
-            --neon-gold: #f59e0b;
-            --text-light: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-        }
-        body { margin: 0; padding: 0; background-color: var(--bg-deep); color: var(--text-light); font-family: 'Segoe UI', sans-serif; min-height: 100vh; overflow-x: hidden; }
-        .ambient-1, .ambient-2 { position: fixed; width: 700px; height: 700px; z-index: -1; pointer-events: none; }
-        .ambient-1 { background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, transparent 70%); top: -250px; left: -150px; }
-        .ambient-2 { background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, transparent 70%); bottom: -250px; right: -150px; }
-        header { text-align: center; padding: 40px 20px; background: rgba(5, 5, 15, 0.85); border-bottom: 1px solid var(--border-color); backdrop-filter: blur(20px); }
-        header h1 { margin: 0; font-size: 38px; font-weight: 800; background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .workspace-grid { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; gap: 30px; }
-        .studio-panel { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 25px; backdrop-filter: blur(25px); }
-        .panel-title { font-size: 18px; font-weight: 700; margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-        input, textarea { width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; color: white; box-sizing: border-box; }
-        .studio-btn { background: linear-gradient(135deg, var(--neon-blue) 0%, #3b82f6 100%); color: #020206; border: none; padding: 14px 28px; border-radius: 14px; cursor: pointer; font-weight: 700; }
-        .chatbot-box { height: 420px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.25); border-radius: 16px; margin-bottom: 15px; }
-        .msg { max-width: 80%; padding: 12px 18px; border-radius: 16px; margin-bottom: 10px; }
-        .user-msg { background: #1e1b4b; align-self: flex-end; margin-left: auto; }
-        .ai-msg { background: rgba(255, 255, 255, 0.03); }
-        .story-scroller { max-height: 320px; overflow-y: auto; }
-        .story-card { background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 15px; border-radius: 14px; margin-bottom: 10px; }
+        body { font-family: 'Arial', sans-serif; background-color: #0a0a12; color: #ffffff; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; text-align: center; }
+        h1 { color: #88aaff; }
+        #botBox { height: 400px; border: 1px solid #333; overflow-y: scroll; padding: 10px; background: #161625; margin-bottom: 10px; text-align: left; border-radius: 8px; }
+        .msg { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .user-msg { background: #2b2b40; text-align: right; }
+        .ai-msg { background: #3d3d5c; text-align: left; }
+        #botInput { width: 70%; padding: 10px; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; background: #88aaff; border: none; border-radius: 5px; cursor: pointer; color: #000; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="ambient-1"></div><div class="ambient-2"></div>
-    <header><h1>SRIRANGAM VIGNESH AI MULTIMEDIA HUB</h1></header>
-    <div class="workspace-grid">
-        <div class="studio-panel">
-            <h2 class="panel-title" style="color:var(--neon-pink)">🤖 Live Intelligent AI Core Assistant</h2>
-            <div class="chatbot-box" id="botBox"></div>
-            <div style="display:flex; gap:12px;">
-                <input type="text" id="botInput" placeholder="Send a message...">
-                <button class="studio-btn" onclick="runBot()">ASK AI</button>
-            </div>
+    <div class="container">
+        <h1>SRIRANGAM VIGNESH AI MULTIMEDIA HUB</h1>
+        <p>Professional Next-Gen Workspace</p>
+        
+        <div id="botBox">
+            <div class="msg ai-msg">Hi! Srirangam Vignesh garu, welcome back. How can I help you today?</div>
         </div>
-        <div class="studio-panel">
-            <h2 class="panel-title" style="color:var(--neon-gold)">🎬 Production Storyboard Engine</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
-                <div>
-                    <input type="text" id="sceneTitle" placeholder="Scene Title"><br><br>
-                    <textarea id="sceneDetails" rows="4" placeholder="Script Notes"></textarea><br><br>
-                    <button class="studio-btn" onclick="addScene()">COMMIT</button>
-                </div>
-                <div class="story-scroller" id="storyScroller"></div>
-            </div>
-        </div>
+        
+        <input type="text" id="botInput" placeholder="Send a message to AI...">
+        <button onclick="runBot()">ASK AI</button>
     </div>
 
     <script>
-        window.onload = refreshStoryboard;
-
         async function runBot() {
             const input = document.getElementById('botInput');
             const box = document.getElementById('botBox');
@@ -72,38 +40,21 @@
             input.value = '';
 
             try {
+                // Backend call
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: text })
                 });
                 const data = await response.json();
-                const reply = data.candidates[0].content.parts[0].text;
-                box.innerHTML += `<div class="msg ai-msg">${reply.replace(/\n/g, "<br>")}</div>`;
+                
+                if (data.reply) {
+                    box.innerHTML += `<div class="msg ai-msg">${data.reply}</div>`;
+                }
             } catch (e) {
-                box.innerHTML += `<div class="msg" style="color:red">Error connecting to backend.</div>`;
+                box.innerHTML += `<div class="msg ai-msg">Error: Check your backend server connection.</div>`;
             }
-        }
-
-        function addScene() {
-            const title = document.getElementById('sceneTitle').value;
-            const details = document.getElementById('sceneDetails').value;
-            if(!title || !details) return;
-            let board = JSON.parse(localStorage.getItem('vignesh_master_board') || '[]');
-            board.push({title, details});
-            localStorage.setItem('vignesh_master_board', JSON.stringify(board));
-            document.getElementById('sceneTitle').value = '';
-            document.getElementById('sceneDetails').value = '';
-            refreshStoryboard();
-        }
-
-        function refreshStoryboard() {
-            const scroller = document.getElementById('storyScroller');
-            let board = JSON.parse(localStorage.getItem('vignesh_master_board') || '[]');
-            scroller.innerHTML = board.length === 0 ? '<i>Staging pool empty.</i>' : '';
-            board.forEach(s => {
-                scroller.innerHTML += `<div class="story-card"><strong>${s.title}</strong><br>${s.details}</div>`;
-            });
+            box.scrollTop = box.scrollHeight;
         }
     </script>
 </body>
