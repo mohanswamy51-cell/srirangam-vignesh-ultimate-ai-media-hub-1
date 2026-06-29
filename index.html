@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Srirangam Vignesh Ultimate AI Media Hub</title>
+    <style>
+        :root {
+            --bg-deep: #03030b;
+            --panel-bg: rgba(13, 18, 36, 0.75);
+            --neon-blue: #00f2fe;
+            --neon-pink: #ec4899;
+            --neon-gold: #f59e0b;
+            --text-light: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-deep);
+            color: var(--text-light);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .ambient-1 {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, transparent 70%);
+            top: -250px;
+            left: -150px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .ambient-2 {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, transparent 70%);
+            bottom: -250px;
+            right: -150px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(5, 5, 15, 0.85);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 38px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .workspace-grid {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .studio-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 25px;
+            backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pink-t { color: var(--neon-pink); }
+        .gold-t { color: var(--neon-gold); }
+
+        .input-block { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; font-weight: 600; }
+        
+        input, textarea {
+            width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px;
+            color: white; font-size: 15px; box-sizing: border-box; outline: none;
+        }
+        input:focus, textarea:focus { border-color: var(--neon-blue); }
+
+        .studio-btn {
+            background: linear-gradient(135deg, var(--neon-blue) 0%, #3b82f6 100%);
+            color: #020206; border: none; padding: 14px 28px; font-size: 15px;
+            font-weight: 700; border-radius: 14px; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .studio-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-magenta { background: linear-gradient(135deg, #a855f7 0%, var(--neon-pink) 100%); }
+
+        .chatbot-box { height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding: 15px; background: rgba(0,0,0,0.25); border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); }
+        .msg { max-width: 80%; padding: 12px 18px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; }
+        .user-msg { background: #1e1b4b; align-self: flex-end; border-radius: 16px 16px 4px 16px; border: 1px solid rgba(236, 72, 153, 0.15); }
+        .ai-msg { background: rgba(255, 255, 255, 0.03); align-self: flex-start; border-radius: 16px 16px 16px 4px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .error-msg { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #fca5a5; align-self: flex-start; }
+
+        .story-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 768px) { .story-layout { grid-template-columns: 1fr; } }
+        
+        .story-scroller { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .story-card { background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 15px; border-radius: 14px; }
+
+        .typing-loader { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: var(--neon-pink); animation: bounce 0.5s infinite alternate; margin: 0 2px; }
+        .typing-loader:nth-child(2) { animation-delay: 0.15s; }
+        .typing-loader:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes bounce { to { transform: translateY(-5px); } }
+
+        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.15); font-size: 12px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.04); }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-1"></div>
+    <div class="ambient-2"></div>
+
+    <header>
+        <h1>SRIRANGAM VIGNESH AI MULTIMEDIA HUB</h1>
+        <p>Professional Next-Gen Workspace for Production Tracking & Real-Time Intelligent Processing</p>
+    </header>
+
+    <div class="workspace-grid">
+        <div class="studio-panel">
+            <h2 class="panel-title pink-t">🤖 Live Intelligent AI Core Assistant</h2>
+            
+            <div class="input-block" style="margin-bottom: 12px;">
+                <label style="color: var(--neon-gold);">Google AI Studio API Key:</label>
+                <input type="password" id="apiKeyInput" placeholder="Enter API key" value="">
+            </div>
+
+            <div class="chatbot-box" id="botBox">
+                <div class="msg ai-msg">
+                    Auto-failover matrix embedded. System will dynamically select working routing patterns.
+                </div>
+            </div>
+            <div style="display:flex; gap:12px;">
+                <input type="text" id="botInput" placeholder="Send a message to AI..." onkeydown="if(event.key === 'Enter') runBot()">
+                <button class="studio-btn btn-magenta" id="sendBtn" onclick="runBot()">ASK AI</button>
+            </div>
+        </div>
+
+        <div class="studio-panel">
+            <h2 class="panel-title gold-t">🎬 Interactive Production Storyboard Engine</h2>
+            <div class="story-layout">
+                <div>
+                    <div class="input-block">
+                        <label>Scene Tracking ID / Title:</label>
+                        <input type="text" id="sceneTitle" placeholder="e.g., Scene 01">
+                    </div>
+                    <div class="input-block">
+                        <label>Production Script Notes:</label>
+                        <textarea id="sceneDetails" rows="4" placeholder="Input staging data..."></textarea>
+                    </div>
+                    <button class="studio-btn" style="background:linear-gradient(135deg, var(--neon-gold) 0%, #d97706 100%);" onclick="addScene()">COMMIT TO STORYBOARD</button>
+                </div>
+                <div>
+                    <label>Active Local Staging Database:</label>
+                    <div class="story-scroller" id="storyScroller"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>PRODUCTION WORKSPACE v11.0 • SRIRANGAM VIGNESH ALL RIGHTS RESERVED</footer>
+
+    <script>
+        window.onload = function() { refreshStoryboard(); };
+
+        async function runBot() {
+            const input = document.getElementById('botInput');
+            const box = document.getElementById('botBox');
+            const sendBtn = document.getElementById('sendBtn');
+            const keyInput = document.getElementById('apiKeyInput').value.trim();
+            const text = input.value.trim();
+            
+            if (!text) return;
+
+            const uMsg = document.createElement('div');
+            uMsg.className = 'msg user-msg';
+            uMsg.innerText = text;
+            box.appendChild(uMsg);
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'msg ai-msg';
+            loadingMsg.id = 'ai-typing';
+            loadingMsg.innerHTML = '<span class="typing-loader"></span><span class="typing-loader"></span><span class="typing-loader"></span>';
+            box.appendChild(loadingMsg);
+            box.scrollTop = box.scrollHeight;
+            
+            input.disabled = true;
+            sendBtn.disabled = true;
+
+            const modelPool = [
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+                "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent",
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+            ];
+
+            let success = false;
+            let lastErrorMsg = "";
+
+            for (let url of modelPool) {
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/json",
+                            "x-goog-api-key": keyInput
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: text }] }]
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.status === 404) {
+                        lastErrorMsg = `Endpoint ${url.split('/models/')[1].split(':')[0]} active check negative. Routing next pool...`;
+                        continue;
+                    }
+
+                    if(document.getElementById('ai-typing')) document.getElementById('ai-typing').remove();
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = 'msg ai-msg';
+
+                    if (data.candidates && data.candidates[0].content.parts[0].text) {
+                        let aiReply = data.candidates[0].content.parts[0].text;
+                        aiMsg.innerHTML = aiReply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                        success = true;
+                    } else if (data.error) {
+                        aiMsg.className = 'msg error-msg';
+                        aiMsg.innerHTML = `<strong>Google API Context:</strong> ${data.error.message}`;
+                        success = true;
+                    }
+                    box.appendChild(aiMsg);
+                    if (success) break;
+
+                } catch (error) {
+                    lastErrorMsg = "Local network block or CORS configuration exception.";
+                }
+            }
+
+            if (!success) {
+                if(document.getElementById('ai-typing')) document.getElementById('ai-typing').remove();
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'msg error-msg';
+                aiMsg.innerHTML = `<strong>All connection sequences dropped.</strong> Last state: ${lastErrorMsg}`;
+                box.appendChild(aiMsg);
+            }
+
+            input.disabled = false;
+            sendBtn.disabled = false;
+            input.focus();
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function addScene() {
+            const title = document.getElementById('sceneTitle').value.trim();
+            const details = document.getElementById('sceneDetails').value.trim();
+            if (!title || !details) return;
+            let board = JSON.parse(localStorage.getItem('vignesh_master_board')) || [];
+            board.push({ title: title, details: details });
+            localStorage.setItem('vignesh_master_board', JSON.stringify(board));
+            document.getElementById('sceneTitle').value = '';
+            document.getElementById('sceneDetails').value = '';
+            refreshStoryboard();
+        }
+
+        function refreshStoryboard() {
+            const scroller = document.getElementById('storyScroller');
+            let board = JSON.parse(localStorage.getItem('vignesh_master_board')) || [];
+            if (board.length === 0) {
+                scroller.innerHTML = '<div style="color:#4b5563; font-style:italic; padding:10px;">Staging pool empty.</div>';
+                return;
+            }
+            scroller.innerHTML = '';
+            board.forEach(scene => {
+                const card = document.createElement('div');
+                card.className = 'story-card';
+                card.innerHTML = `<strong>${scene.title}</strong><span style="color:#cbd5e1; font-size:14px; display:block; margin-top:5px;">${scene.details}</span>`;
+                scroller.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
