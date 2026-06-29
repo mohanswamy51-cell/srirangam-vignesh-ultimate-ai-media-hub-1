@@ -198,7 +198,39 @@
             const input = document.getElementById('botInput');
             const box = document.getElementById('botBox');
             const sendBtn = document.getElementById('sendBtn');
-            const keyInput = document.getElementById('apiKeyInput').value.trim();
+            async function runBot() {
+    const input = document.getElementById('botInput');
+    const box = document.getElementById('botBox');
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    // 1. User message ని screen మీద చూపించండి (Pai line code unnattugaane unchandi)
+    const uMsg = document.createElement('div');
+    uMsg.className = 'msg user-msg';
+    uMsg.innerText = text;
+    box.appendChild(uMsg);
+    input.value = '';
+    box.scrollTop = box.scrollHeight;
+
+    // 2. API Key ని తీసేయండి (Line 201 తీసేయండి)
+    
+    // 3. Backend (/api/chat) కి రిక్వెస్ట్ పంపండి
+    const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+    });
+
+    const data = await response.json();
+    
+    // 4. AI response ని screen మీద చూపించండి
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai-msg';
+    aiMsg.innerText = data.candidates[0].content.parts[0].text; // మీ AI response format బట్టి
+    box.appendChild(aiMsg);
+    box.scrollTop = box.scrollHeight;
+}
             const text = input.value.trim();
             
             if (!text) return;
