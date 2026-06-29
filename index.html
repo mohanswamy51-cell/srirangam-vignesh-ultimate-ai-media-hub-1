@@ -194,18 +194,15 @@
     <script>
         window.onload = function() { refreshStoryboard(); };
 
-        async function runBot() {
-            const input = document.getElementById('botInput');
-            const box = document.getElementById('botBox');
-            const sendBtn = document.getElementById('sendBtn');
-            async function runBot() {
+async function runBot() {
     const input = document.getElementById('botInput');
     const box = document.getElementById('botBox');
+    const sendBtn = document.getElementById('sendBtn');
     const text = input.value.trim();
 
     if (!text) return;
 
-    // 1. User message ని screen మీద చూపించండి (Pai line code unnattugaane unchandi)
+    // 1. User message display
     const uMsg = document.createElement('div');
     uMsg.className = 'msg user-msg';
     uMsg.innerText = text;
@@ -213,63 +210,55 @@
     input.value = '';
     box.scrollTop = box.scrollHeight;
 
-    // 2. API Key ని తీసేయండి (Line 201 తీసేయండి)
+    // 2. Loading state
+    const loadingMsg = document.createElement('div');
+    loadingMsg.className = 'msg ai-msg';
+    loadingMsg.id = 'ai-typing';
+    loadingMsg.innerHTML = '<span class="typing-loader"></span><span class="typing-loader"></span><span class="typing-loader"></span>';
+    box.appendChild(loadingMsg);
+    box.scrollTop = box.scrollHeight;
     
-    // 3. Backend (/api/chat) కి రిక్వెస్ట్ పంపండి
-    const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-    });
+    input.disabled = true;
+    sendBtn.disabled = true;
 
-    const data = await response.json();
-    
-    // 4. AI response ని screen మీద చూపించండి
-    const aiMsg = document.createElement('div');
-    aiMsg.className = 'msg ai-msg';
-    aiMsg.innerText = data.candidates[0].content.parts[0].text; // మీ AI response format బట్టి
-    box.appendChild(aiMsg);
+    // 3. Backend call
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+        });
+
+        const data = await response.json();
+        
+        // 4. AI response display
+        document.getElementById('ai-typing').remove();
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'msg ai-msg';
+        
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            let reply = data.candidates[0].content.parts[0].text;
+            aiMsg.innerHTML = reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        } else {
+            aiMsg.className = 'msg error-msg';
+            aiMsg.innerText = "Error: Could not retrieve response.";
+        }
+        box.appendChild(aiMsg);
+    } catch (err) {
+        if(document.getElementById('ai-typing')) document.getElementById('ai-typing').remove();
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'msg error-msg';
+        errorMsg.innerText = "Connection error with backend.";
+        box.appendChild(errorMsg);
+    }
+
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
     box.scrollTop = box.scrollHeight;
 }
-            const text = input.value.trim();
-            
-            if (!text) return;
-
-            const uMsg = document.createElement('div');
-            uMsg.className = 'msg user-msg';
-            uMsg.innerText = text;
-            box.appendChild(uMsg);
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
-
-            const loadingMsg = document.createElement('div');
-            loadingMsg.className = 'msg ai-msg';
-            loadingMsg.id = 'ai-typing';
-            loadingMsg.innerHTML = '<span class="typing-loader"></span><span class="typing-loader"></span><span class="typing-loader"></span>';
-            box.appendChild(loadingMsg);
-            box.scrollTop = box.scrollHeight;
-            
-            input.disabled = true;
-            sendBtn.disabled = true;
-
-            const modelPool = [
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-                "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent",
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-            ];
-
-            let success = false;
-            let lastErrorMsg = "";
-
-            for (let url of modelPool) {
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json",
-                            "x-goog-api-key": keyInput
-                        },
-                        body: JSON.stringify({
+        
+        body: JSON.stringify({
                             contents: [{ parts: [{ text: text }] }]
                         })
                     });
